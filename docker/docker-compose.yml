@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: nestjs-auth-refresh-token-example-postgres
+    image: postgres:16.2
+    environment:
+      TZ: ${DB_TIMEZONE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+    
+

@@ -1,0 +1,148 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
+import { Customer } from './customer.entity';
+
+import { LotList } from 'src/modules/lotlists/lots.list.entity';
+import type { User } from '../interface';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+@Injectable()
+export class CustomerService {
+  constructor(
+    @InjectRepository(LotList)
+    private lotListRepository: Repository<LotList>,
+    @InjectRepository(Customer)
+    private customerRepository: Repository<Customer>,
+  ) {}
+
+  // findOne(id: number): Promise<User | null> {
+  //   return MysqlDataSource.manager.findOneBy({ id });
+  // }
+
+  // async remove(id: number): Promise<void> {
+  //   await this.usersRepository.delete(id);
+  // }
+
+  async findAll(): Promise<number[]> {
+    const lotListNumbers = await this.lotListRepository
+      .createQueryBuilder('lot_list')
+      .select('lotNumber')
+      .where('lot_list.inUse = :inUse', { inUse: 1 })
+      .andWhere('lot_list.dateEnd > :currentTime', {
+        currentTime: new Date(),
+      })
+      // .andWhere('lot_list.dateStart < :currentTime', {
+      //   currentTime: new Date(),
+      // })
+      .orderBy('lot_list.lotnumber', 'DESC')
+      .execute();
+
+    const lots = await this.customerRepository.find({
+      select: { lotNumber: true },
+    });
+
+    const numbers1 = lotListNumbers.map((item) => {
+      const number = item['lotNumber'];
+
+      return number;
+    });
+
+    const numbers2 = lots.map((user) => {
+      const number = user.lotNumber;
+
+      return number;
+    });
+
+    const intersection =
+      numbers2.length > 0
+        ? numbers1.filter(
+            (item1: number) =>
+              !numbers2.find((item2: number) => item1 === item2),
+          )
+        : numbers1;
+
+    // const lotNumbers = intersection.map((lot: number) => {
+    //   const lotNumber = lot;
+    //   return lotNumber;
+    // });
+
+    return intersection;
+  }
+
+  async findAllCustomers(): Promise<Customer[]> {
+    const lots = await this.customerRepository.find();
+
+    return lots;
+  }
+
+  async createList(listName: string) {
+    const n = 1000;
+    const range = Array.from({ length: n + 1 }, (v, k) => k);
+    const lotList = await this.lotListRepository.findOneBy({
+      listName: listName['title'],
+    });
+
+    if (lotList) {
+      throw new InternalServerErrorException('list already exists');
+    }
+    range.forEach((item) => {
+      if (item > 0) {
+        const lotList = new LotList();
+        lotList.listName = listName['title'];
+        lotList.inUse = true;
+        lotList.lotNumber = item;
+        lotList.dateStart = new Date(listName['startDate']);
+        lotList.dateEnd = new Date(listName['endDate']);
+        try {
+          return this.lotListRepository.insert(lotList);
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
+      }
+    });
+    return true;
+  }
+
+  async create(user: User) {
+    const lotList = await this.lotListRepository
+      .createQueryBuilder('lot_list')
+      .select('listName')
+      .where('lot_list.inUse = :inUse', { inUse: 1 })
+      .andWhere('lot_list.dateEnd > :currentTime', {
+        currentTime: new Date(),
+      })
+      .execute();
+
+    return user.lotNumber.map((lotNumber) => {
+      const userDb = new Customer();
+      userDb.firstName = user.firstName;
+      userDb.lastName = user.lastName;
+      userDb.address = user.address;
+      userDb.phoneNumber = user.phoneNumber;
+      userDb.lotNumber = lotNumber.value;
+      userDb.postalCode = user.postalCode;
+      userDb.lotListName = lotList[0].listName;
+      try {
+        this.customerRepository.save(userDb);
+      } catch (error) {
+        console.log(error);
+      }
+      //return lot;
+    });
+
+    //userDb.lots = lots;
+    // await mySqlDataSource.manager.save(userDb);
+    // user.lotNumber.map((lotNumber) => {
+    //   const lot = new Lot();
+    //   lot.listName = 'kevätarpajaiset 2025';
+    //   lot.lotNumber = +lotNumber.value;
+    //   lot.user = userDb;
+    //   mySqlDataSource.manager.save(lot);
+    //   return lot;
+    // });
+
+    //  await MysqlDataSource.manager.save(user);
+    //await MysqlDataSource.createQueryBuilder().update(['lots']).execute();
+  }
+}
