@@ -15,34 +15,25 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  // findOne(id: number): Promise<User | null> {
-  //   return MysqlDataSource.manager.findOneBy({ id });
-  // }
-
-  // async remove(id: number): Promise<void> {
-  //   await this.usersRepository.delete(id);
-  // }
-
   async findAll(): Promise<number[]> {
     const lotListNumbers = await this.lotListRepository
       .createQueryBuilder('lot_list')
-      .select('lotNumber')
-      .where('lot_list.inUse = :inUse', { inUse: 1 })
+      .select('lot_list.lotNumber')
+      .where('lot_list.inUse = :inUse', { inUse: true })
       .andWhere('lot_list.dateEnd > :currentTime', {
         currentTime: new Date(),
       })
       // .andWhere('lot_list.dateStart < :currentTime', {
       //   currentTime: new Date(),
       // })
-      .orderBy('lot_list.lotnumber', 'DESC')
+      .orderBy('lot_list.lotNumber', 'DESC')
       .execute();
 
     const lots = await this.customerRepository.find({
       select: { lotNumber: true },
     });
-
     const numbers1 = lotListNumbers.map((item) => {
-      const number = item['lotNumber'];
+      const number = item['lot_list_lotNumber'];
 
       return number;
     });
@@ -60,11 +51,6 @@ export class CustomerService {
               !numbers2.find((item2: number) => item1 === item2),
           )
         : numbers1;
-
-    // const lotNumbers = intersection.map((lot: number) => {
-    //   const lotNumber = lot;
-    //   return lotNumber;
-    // });
 
     return intersection;
   }
@@ -93,10 +79,12 @@ export class CustomerService {
         lotList.lotNumber = item;
         lotList.dateStart = new Date(listName['startDate']);
         lotList.dateEnd = new Date(listName['endDate']);
+        lotList.unitPrice = 10;
         try {
           return this.lotListRepository.insert(lotList);
         } catch (error) {
           console.log(error);
+          throw new InternalServerErrorException(error);
           return false;
         }
       }
@@ -128,21 +116,6 @@ export class CustomerService {
       } catch (error) {
         console.log(error);
       }
-      //return lot;
     });
-
-    //userDb.lots = lots;
-    // await mySqlDataSource.manager.save(userDb);
-    // user.lotNumber.map((lotNumber) => {
-    //   const lot = new Lot();
-    //   lot.listName = 'kevätarpajaiset 2025';
-    //   lot.lotNumber = +lotNumber.value;
-    //   lot.user = userDb;
-    //   mySqlDataSource.manager.save(lot);
-    //   return lot;
-    // });
-
-    //  await MysqlDataSource.manager.save(user);
-    //await MysqlDataSource.createQueryBuilder().update(['lots']).execute();
   }
 }

@@ -18,4 +18,7 @@ export class LotList {
 
   @Column()
   inUse: boolean;
+
+  @Column()
+  unitPrice: number;
 }

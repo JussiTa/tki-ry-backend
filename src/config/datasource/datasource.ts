@@ -1,4 +1,3 @@
-
 import { AuthRefreshToken } from 'src/modules/authentication/auth-refresh-token.entity';
 import { Customer } from 'src/modules/lotlists-customers/customer.entity';
 import { LotList } from 'src/modules/lotlists/lots.list.entity';

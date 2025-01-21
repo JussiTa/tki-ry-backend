@@ -44,12 +44,6 @@ export class AuthController {
     return this.authService.login(res, req.user);
   }
 
-  // @HttpCode(HttpStatus.OK)
-  // @Post('/create')
-  // signUp(@Body() signInDto: Record<string, any>) {
-  //   return this.authService.signUp(signInDto.username, signInDto.password);
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getProfile(@Req() req) {

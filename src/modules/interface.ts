@@ -11,3 +11,29 @@ export type User = {
   phoneNumber: string;
   lotNumber: SelectedNumbers[];
 };
+
+export type PaymentGroups = {
+  id: string;
+  name: string;
+  svg: string;
+};
+
+export type ProviderPrameters = {
+  name: string;
+  value: string;
+};
+
+export type PaymentProviders = {
+  url: string;
+  icon: string;
+  svg: string;
+  name: string;
+  group: string;
+  id: string;
+  parameters: ProviderPrameters[];
+};
+
+export type PaymentData = {
+  providers: PaymentProviders[];
+  groups: PaymentGroups[];
+};

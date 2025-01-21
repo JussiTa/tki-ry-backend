@@ -1,11 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PayTrailService } from './paytrail.service';
+import { Public } from '../authentication/decorators/public.decorator';
 @Controller('paytrail')
 export class PayTrailController {
   constructor(private readonly paytrailService: PayTrailService) {}
 
-  @Post()
-  createPayment(@Body() paymenData: string) {
-    this.paytrailService.createPayment();
+  @Get('get-payments')
+  @Public()
+  @Public()
+  getPayments() {
+    return this.paytrailService.createPayment();
   }
 }

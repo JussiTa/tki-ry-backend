@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import type { User } from '../interface';
 import { Customer } from './customer.entity';
+import { Public } from '../authentication/decorators/public.decorator';
 
 @Controller('lotlists-customers')
 export class CustomerController {
@@ -11,7 +12,7 @@ export class CustomerController {
   create(@Body() req: any): Promise<boolean> {
     return this.customerService.createList(req);
   }
-
+  @Public()
   @Get('/get-all')
   findAll(): Promise<number[]> {
     return this.customerService.findAll();

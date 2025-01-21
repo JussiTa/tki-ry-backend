@@ -1,8 +1,8 @@
-version: "3"
+version: '3'
 
 services:
   postgres:
-    container_name: nestjs-auth-refresh-token-example-postgres
+    container_name: tkiry-postgres
     image: postgres:16.2
     environment:
       TZ: ${DB_TIMEZONE}
@@ -11,7 +11,4 @@ services:
       POSTGRES_DB: ${DB_NAME}
       PG_DATA: /var/lib/postgresql/data
     ports:
-      - "5432:5432"
-
-    
-
+      - '5432:5432'
