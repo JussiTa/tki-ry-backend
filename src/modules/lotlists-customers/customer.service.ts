@@ -3,7 +3,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Customer } from './customer.entity';
 
 import { LotList } from 'src/modules/lotlists/lots.list.entity';
-import type { User } from '../interface';
+import type { LotNumber, User } from '../interface';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
@@ -15,10 +15,9 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async findAll(): Promise<number[]> {
+  async findAll(): Promise<LotNumber[]> {
     const lotListNumbers = await this.lotListRepository
       .createQueryBuilder('lot_list')
-      .select('lot_list.lotNumber')
       .where('lot_list.inUse = :inUse', { inUse: true })
       .andWhere('lot_list.dateEnd > :currentTime', {
         currentTime: new Date(),
@@ -44,15 +43,25 @@ export class CustomerService {
       return number;
     });
 
-    const intersection =
+    const numbersIntersection =
       numbers2.length > 0
         ? numbers1.filter(
             (item1: number) =>
               !numbers2.find((item2: number) => item1 === item2),
           )
         : numbers1;
+    const lotNumbers = Array.isArray(numbersIntersection)
+      ? numbersIntersection.map((item) => {
+          const lotNumber: LotNumber = {
+            lotNumber: item,
+            unitPrice: lotListNumbers[0]['lot_list_unitPrice'],
+          };
+          return lotNumber;
+        })
+      : null;
+    console.log(lotNumbers);
 
-    return intersection;
+    return lotNumbers;
   }
 
   async findAllCustomers(): Promise<Customer[]> {

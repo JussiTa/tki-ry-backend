@@ -2,6 +2,10 @@ export type SelectedNumbers = {
   value: number;
   label: string;
 };
+export type LotNumber = {
+  lotNumber: number;
+  unitPrice: number;
+};
 
 export type User = {
   firstName: string;

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import type { User } from '../interface';
+import type { LotNumber, User } from '../interface';
 import { Customer } from './customer.entity';
 import { Public } from '../authentication/decorators/public.decorator';
 
@@ -14,7 +14,7 @@ export class CustomerController {
   }
   @Public()
   @Get('/get-all')
-  findAll(): Promise<number[]> {
+  findAll(): Promise<LotNumber[]> {
     return this.customerService.findAll();
   }
 

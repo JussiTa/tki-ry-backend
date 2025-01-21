@@ -1,14 +1,15 @@
-import { calculateHmac } from './hmac';
 import { PaytrailClient } from '@paytrail/paytrail-js-sdk/dist/paytrail-client';
-import { body, SECRET, headers } from './hmac';
-import { PaymentMethodGroup } from '@paytrail/paytrail-js-sdk';
-import { PaymentData, PaymentGroups, PaymentProviders } from '../interface';
-import axios from 'axios';
+import {
+  PaymentData,
+  PaymentGroups,
+  PaymentProviders,
+  User,
+} from '../interface';
 
 export class PayTrailService {
   constructor() {}
 
-  async createPayment() {
+  async createPayment(user: User) {
     const client = new PaytrailClient({
       merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
@@ -60,8 +61,6 @@ export class PayTrailService {
       providers: providers,
       groups: groups,
     };
-
-    console.log(data.data.providers);
 
     return paymentData;
   }

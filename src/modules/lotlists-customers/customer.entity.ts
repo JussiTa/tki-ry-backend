@@ -24,7 +24,4 @@ export class Customer {
   lotListName: string;
   @Column()
   lotNumber: number;
-
-  //@OneToMany(() => Lot, (lot) => lot.user)
-  //lots: Lot[];
 }

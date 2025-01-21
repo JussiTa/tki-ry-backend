@@ -19,10 +19,5 @@ export class DbInitializationService {
       password: '1234',
       role: Role.Admin,
     });
-    await this.userService.create({
-      email: 'regular@user.com',
-      password: '1234',
-      role: Role.User,
-    });
   }
 }

@@ -10,7 +10,4 @@ export class Lot {
 
   @Column()
   listName: string;
-
-  //@ManyToOne(() => User, (user) => user.lots)
-  // user: User;
 }
