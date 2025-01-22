@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import type { LotNumber, User } from '../interface';
-import { Customer } from './customer.entity';
+import type { LotNumber, Customer } from '../interface';
+import { Customer as CustomerEntity } from './customer.entity';
 import { Public } from '../authentication/decorators/public.decorator';
 
 @Controller('lotlists-customers')
@@ -19,7 +19,7 @@ export class CustomerController {
   }
 
   @Get('/get-all-customers')
-  findAllWithCustomers(): Promise<Customer[]> {
+  findAllWithCustomers(): Promise<CustomerEntity[]> {
     return this.customerService.findAllCustomers();
   }
 
@@ -28,7 +28,7 @@ export class CustomerController {
   //   return this.usersService.findOne(id);
   // }
   @Post('/create-customer')
-  createCustomer(@Body() user: User) {
+  createCustomer(@Body() user: Customer) {
     return this.customerService.create(user);
   }
 

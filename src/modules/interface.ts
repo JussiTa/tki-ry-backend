@@ -7,13 +7,15 @@ export type LotNumber = {
   unitPrice: number;
 };
 
-export type User = {
+export type Customer = {
   firstName: string;
   lastName: string;
   address: string;
   postalCode: number;
   phoneNumber: string;
   lotNumber: SelectedNumbers[];
+  totalAmount: number;
+  email: string;
 };
 
 export type PaymentGroups = {

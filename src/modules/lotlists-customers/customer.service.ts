@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
-import { Customer } from './customer.entity';
+import { Customer as CustomerEntity } from './customer.entity';
 
 import { LotList } from 'src/modules/lotlists/lots.list.entity';
-import type { LotNumber, User } from '../interface';
+import type { LotNumber, Customer } from '../interface';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
@@ -11,8 +11,8 @@ export class CustomerService {
   constructor(
     @InjectRepository(LotList)
     private lotListRepository: Repository<LotList>,
-    @InjectRepository(Customer)
-    private customerRepository: Repository<Customer>,
+    @InjectRepository(CustomerEntity)
+    private customerRepository: Repository<CustomerEntity>,
   ) {}
 
   async findAll(): Promise<LotNumber[]> {
@@ -59,12 +59,11 @@ export class CustomerService {
           return lotNumber;
         })
       : null;
-    console.log(lotNumbers);
 
     return lotNumbers;
   }
 
-  async findAllCustomers(): Promise<Customer[]> {
+  async findAllCustomers(): Promise<CustomerEntity[]> {
     const lots = await this.customerRepository.find();
 
     return lots;
@@ -101,7 +100,7 @@ export class CustomerService {
     return true;
   }
 
-  async create(user: User) {
+  async create(user: Customer) {
     const lotList = await this.lotListRepository
       .createQueryBuilder('lot_list')
       .select('listName')
@@ -112,7 +111,7 @@ export class CustomerService {
       .execute();
 
     return user.lotNumber.map((lotNumber) => {
-      const userDb = new Customer();
+      const userDb = new CustomerEntity();
       userDb.firstName = user.firstName;
       userDb.lastName = user.lastName;
       userDb.address = user.address;

@@ -3,13 +3,14 @@ import {
   PaymentData,
   PaymentGroups,
   PaymentProviders,
-  User,
+  Customer,
 } from '../interface';
 
 export class PayTrailService {
   constructor() {}
 
-  async createPayment(user: User) {
+  async createPayment(user: Customer) {
+    console.log(user);
     const client = new PaytrailClient({
       merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
@@ -18,11 +19,11 @@ export class PayTrailService {
     const standardData = {
       stamp: crypto.randomUUID(),
       reference: '9187445',
-      amount: 30,
+      amount: user.totalAmount,
       currency: 'EUR',
       language: 'FI',
       customer: {
-        email: 'erja.esimerkki@example.org',
+        email: user.email,
       },
       redirectUrls: {
         success: 'https://tki-ry-frontend.onrender.com/success',
@@ -35,6 +36,7 @@ export class PayTrailService {
     };
 
     const data = await client.createPayment(standardData);
+    console.log(data);
     const providers = data.data.providers.map((item) => {
       const provider: PaymentProviders = {
         id: item.id,
