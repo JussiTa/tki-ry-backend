@@ -15,8 +15,8 @@ export class DbInitializationService {
 
   private async fillInUsers() {
     await this.userService.create({
-      email: 'admin@admin.com',
-      password: '1234',
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
       role: Role.Admin,
     });
   }
