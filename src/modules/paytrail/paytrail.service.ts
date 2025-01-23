@@ -36,7 +36,6 @@ export class PayTrailService {
     };
 
     const data = await client.createPayment(standardData);
-    console.log(data);
     const providers = data.data.providers.map((item) => {
       const provider: PaymentProviders = {
         id: item.id,
