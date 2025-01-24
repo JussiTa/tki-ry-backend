@@ -27,9 +27,10 @@ export class CustomerController {
   // findOne(@Param('id') id: number): Promise<User> {
   //   return this.usersService.findOne(id);
   // }
+  @Public()
   @Post('/create-customer')
-  createCustomer(@Body() user: Customer) {
-    return this.customerService.create(user);
+  createCustomer(@Body() customer: Customer) {
+    return this.customerService.create(customer);
   }
 
   // @Delete(':id')

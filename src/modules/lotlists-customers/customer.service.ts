@@ -99,30 +99,29 @@ export class CustomerService {
     return true;
   }
 
-  async create(user: Customer) {
+  async create(customer: Customer) {
     const lotList = await this.lotListRepository
       .createQueryBuilder('lot_list')
-      .select('listName')
       .where('lot_list.inUse = :inUse', { inUse: 1 })
       .andWhere('lot_list.dateEnd > :currentTime', {
         currentTime: new Date(),
       })
-      .execute();
+      .getOne();
 
-    return user.lotNumber.map((lotNumber) => {
+    return customer.lotNumber.map((lotNumber) => {
       const userDb = new CustomerEntity();
-      userDb.firstName = user.firstName;
-      userDb.lastName = user.lastName;
-      userDb.address = user.address;
-      userDb.phoneNumber = user.phoneNumber;
+      userDb.firstName = customer.firstName;
+      userDb.lastName = customer.lastName;
+      userDb.address = customer.address;
+      userDb.phoneNumber = customer.phoneNumber;
       userDb.lotNumber = lotNumber.value;
-      userDb.postalCode = user.postalCode;
-      userDb.lotListName = lotList[0].listName;
+      userDb.postalCode = customer.postalCode;
+      userDb.lotListName = lotList.listName;
       try {
         this.customerRepository.save(userDb);
       } catch (error) {
         console.log(error);
-        throw new InternalServerErrorException(error);
+        throw error;
       }
     });
   }

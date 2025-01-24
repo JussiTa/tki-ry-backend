@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
 export class Customer {
@@ -22,6 +22,6 @@ export class Customer {
 
   @Column()
   lotListName: string;
-  @Column()
+  @Column({ unique: true })
   lotNumber: number;
 }
