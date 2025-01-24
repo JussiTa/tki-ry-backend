@@ -25,12 +25,12 @@ export class PayTrailService {
         email: user.email,
       },
       redirectUrls: {
-        success: 'https://tki-ry-frontend.onrender.com/success',
-        cancel: 'https://tki-ry-frontend.onrender.com/cancel',
+        success: 'https://tkiry-frontend.onrender.com/success',
+        cancel: 'https://tkiry-frontend.onrender.com/cancel',
       },
       callbackUrls: {
-        success: 'https://tki-ry-frontend.onrender.com/success',
-        cancel: 'https://tki-ry-frontend.onrender.com/cancel',
+        success: 'https://tkiry-frontend.onrender.com/success',
+        cancel: 'https://tkiry-frontend.onrender.com/cancel',
       },
     };
 
