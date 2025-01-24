@@ -93,7 +93,6 @@ export class CustomerService {
         } catch (error) {
           console.log(error);
           throw new InternalServerErrorException(error);
-          return false;
         }
       }
     });
@@ -123,6 +122,7 @@ export class CustomerService {
         this.customerRepository.save(userDb);
       } catch (error) {
         console.log(error);
+        throw new InternalServerErrorException(error);
       }
     });
   }

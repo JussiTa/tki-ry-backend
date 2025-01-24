@@ -10,7 +10,6 @@ export class PayTrailService {
   constructor() {}
 
   async createPayment(user: Customer) {
-    console.log(user);
     const client = new PaytrailClient({
       merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
